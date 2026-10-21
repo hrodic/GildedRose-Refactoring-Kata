@@ -1,0 +1,12 @@
+{
+  "name": "PHP Pairing Kata",
+  "image": "mcr.microsoft.com/devcontainers/php:8.4",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client"
+      ]
+    }
+  },
+  "postCreateCommand": "composer install"
+}
