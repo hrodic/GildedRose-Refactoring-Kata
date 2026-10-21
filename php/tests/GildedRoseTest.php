@@ -87,6 +87,16 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
+    public function test_aged_brie_increases_quality_twice_every_day_after_sell_by_date(): void
+    {
+        $sellIn = 0;
+        $item = new Item('Aged Brie', $sellIn, self::MAX_NORMAL_QUALITY - 2);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        $this->assertSame(-1, $item->sellIn);
+        $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
+    }
+
     public function test_quality_never_more_than_max_normal_quality(): void
     {
         $sellIn = 1;
@@ -96,15 +106,57 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
-    public function test_sulfuras_never_alters_quality(): void
+    public function test_sulfuras_never_alters_quality_nor_sell_in(): void
     {
         $sellIn = 1;
         $item = new Item('Sulfuras, Hand of Ragnaros', $sellIn, self::MAX_LEGENDARY_QUALITY);
         $gildedRose = new GildedRose([$item]);
         $gildedRose->updateQuality();
         $this->assertSame(self::MAX_LEGENDARY_QUALITY, $item->quality);
+        $this->assertSame(1, $item->sellIn);
         $gildedRose->updateQuality();
         $this->assertSame(self::MAX_LEGENDARY_QUALITY, $item->quality);
+        $this->assertSame(1, $item->sellIn);
+    }
+
+    public function test_backstage_passes_increase_quality_by_1_when_sell_in_is_greater_than_10(): void
+    {
+        $sellIn = 11;
+        $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY - 1);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        $this->assertSame(10, $item->sellIn);
+        $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
+    }
+
+    public function test_backstage_passes_increase_quality_by_2_when_sell_in_is_10_or_less(): void
+    {
+        $sellIn = 10;
+        $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY - 2);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        $this->assertSame(9, $item->sellIn);
+        $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
+    }
+
+    public function test_backstage_passes_increase_quality_by_3_when_sell_in_is_5_or_less(): void
+    {
+        $sellIn = 5;
+        $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY - 3);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        $this->assertSame(4, $item->sellIn);
+        $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
+    }   
+
+    public function test_backstage_passes_quality_becomes_zero_after_sell_in_date(): void
+    {
+        $sellIn = 0;
+        $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        $this->assertSame(-1, $item->sellIn);
+        $this->assertSame(0, $item->quality);
     }
 
 }
