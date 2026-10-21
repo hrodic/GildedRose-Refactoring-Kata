@@ -46,6 +46,12 @@ class GildedRoseTest extends TestCase
     private const MAX_NORMAL_QUALITY = 50;
     private const MAX_LEGENDARY_QUALITY = 80;
 
+    public function test_item_to_string_magic_method(): void
+    {
+        $item = new Item('Normal item', 1, 1);
+        $this->assertSame('Normal item, 1, 1', (string)$item);
+    }
+
     public function test_quality_degrades_one_per_daybefore_sell_by_date(): void
     {
         $sellIn = 1;
