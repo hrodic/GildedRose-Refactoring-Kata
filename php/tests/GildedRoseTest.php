@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \GildedRose\GildedRose
  * @covers \GildedRose\Item
- * 
+ *
 - All `items` have a `SellIn` value which denotes the number of days we have to sell the `items`
 - All `items` have a `Quality` value which denotes how valuable the item is
 - At the end of each day our system lowers both values for every item
@@ -38,21 +38,22 @@ ownership (you can make the `UpdateQuality` method and `Items` property static i
 for you).
 
 Just for clarification, an item can never have its `Quality` increase above `50`, however __"Sulfuras"__ is a
-legendary item and as such its `Quality` is `80` and it never alters.   
+legendary item and as such its `Quality` is `80` and it never alters.
  */
 
 class GildedRoseTest extends TestCase
 {
     private const MAX_NORMAL_QUALITY = 50;
+
     private const MAX_LEGENDARY_QUALITY = 80;
 
-    public function test_item_to_string_magic_method(): void
+    public function testItemToStringMagicMethod(): void
     {
         $item = new Item('Normal item', 1, 1);
-        $this->assertSame('Normal item, 1, 1', (string)$item);
+        $this->assertSame('Normal item, 1, 1', (string) $item);
     }
 
-    public function test_quality_degrades_one_per_daybefore_sell_by_date(): void
+    public function testQualityDegradesOnePerDaybeforeSellByDate(): void
     {
         $sellIn = 1;
         $dailyQualityDegradation = 1;
@@ -63,7 +64,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY - $dailyQualityDegradation, $item->quality);
     }
 
-    public function test_quality_degrades_twice_per_day_after_sell_by_date(): void
+    public function testQualityDegradesTwicePerDayAfterSellByDate(): void
     {
         $sellIn = 0;
         $dailyQualityDegradation = 2;
@@ -74,7 +75,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY - $dailyQualityDegradation, $item->quality);
     }
 
-    public function test_quality_never_negative(): void
+    public function testQualityNeverNegative(): void
     {
         $sellIn = 1;
         $item = new Item('Normal item', $sellIn, 0);
@@ -83,7 +84,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(0, $item->quality);
     }
 
-    public function test_aged_brie_increases_quality_once_every_day(): void
+    public function testAgedBrieIncreasesQualityOnceEveryDay(): void
     {
         $sellIn = 1;
         $item = new Item('Aged Brie', $sellIn, self::MAX_NORMAL_QUALITY - 1);
@@ -93,7 +94,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
-    public function test_aged_brie_increases_quality_twice_every_day_after_sell_by_date(): void
+    public function testAgedBrieIncreasesQualityTwiceEveryDayAfterSellByDate(): void
     {
         $sellIn = 0;
         $item = new Item('Aged Brie', $sellIn, self::MAX_NORMAL_QUALITY - 2);
@@ -103,7 +104,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
-    public function test_quality_never_more_than_max_normal_quality(): void
+    public function testQualityNeverMoreThanMaxNormalQuality(): void
     {
         $sellIn = 1;
         $item = new Item('Aged Brie', $sellIn, self::MAX_NORMAL_QUALITY);
@@ -112,7 +113,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
-    public function test_sulfuras_never_alters_quality_nor_sell_in(): void
+    public function testSulfurasNeverAltersQualityNorSellIn(): void
     {
         $sellIn = 1;
         $item = new Item('Sulfuras, Hand of Ragnaros', $sellIn, self::MAX_LEGENDARY_QUALITY);
@@ -125,7 +126,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(1, $item->sellIn);
     }
 
-    public function test_backstage_passes_increase_quality_by_1_when_sell_in_is_greater_than_10(): void
+    public function testBackstagePassesIncreaseQualityBy1WhenSellInIsGreaterThan10(): void
     {
         $sellIn = 11;
         $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY - 1);
@@ -135,7 +136,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
-    public function test_backstage_passes_increase_quality_by_2_when_sell_in_is_10_or_less(): void
+    public function testBackstagePassesIncreaseQualityBy2WhenSellInIs10OrLess(): void
     {
         $sellIn = 10;
         $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY - 2);
@@ -145,7 +146,7 @@ class GildedRoseTest extends TestCase
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
     }
 
-    public function test_backstage_passes_increase_quality_by_3_when_sell_in_is_5_or_less(): void
+    public function testBackstagePassesIncreaseQualityBy3WhenSellInIs5OrLess(): void
     {
         $sellIn = 5;
         $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY - 3);
@@ -153,9 +154,9 @@ class GildedRoseTest extends TestCase
         $gildedRose->updateQuality();
         $this->assertSame(4, $item->sellIn);
         $this->assertSame(self::MAX_NORMAL_QUALITY, $item->quality);
-    }   
+    }
 
-    public function test_backstage_passes_quality_becomes_zero_after_sell_in_date(): void
+    public function testBackstagePassesQualityBecomesZeroAfterSellInDate(): void
     {
         $sellIn = 0;
         $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, self::MAX_NORMAL_QUALITY);
@@ -164,5 +165,4 @@ class GildedRoseTest extends TestCase
         $this->assertSame(-1, $item->sellIn);
         $this->assertSame(0, $item->quality);
     }
-
 }
