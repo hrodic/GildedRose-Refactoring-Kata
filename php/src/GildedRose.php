@@ -17,22 +17,12 @@ final class GildedRose
     public function updateQuality(): void
     {
         foreach ($this->items as $item) {
-            // branch for sulfuras
-            if ($item->name === ItemName::Sulfuras->value) {
-                continue;
-            }
-            // branch for aged brie
-            if ($item->name === ItemName::AgedBrie->value) {
-                $this->updateAgedBrie($item);
-                continue;
-            }
-            // branch for backstage passes
-            if ($item->name === ItemName::BackstagePasses->value) {
-                $this->updateBackstagePasses($item);
-                continue;
-            }
-            // default branch
-            $this->updateDefault($item);
+            match (ItemName::tryFrom($item->name)) {
+                ItemName::Sulfuras => null,
+                ItemName::AgedBrie => $this->updateAgedBrie($item),
+                ItemName::BackstagePasses => $this->updateBackstagePasses($item),
+                null => $this->updateDefault($item),
+            };
         }
     }
 
