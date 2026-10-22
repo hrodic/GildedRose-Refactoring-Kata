@@ -25,9 +25,9 @@
     },
     "scripts": {
         "tests": "phpunit",
-        "test-coverage": "phpunit --coverage-html build/coverage",
+        "test-coverage": "XDEBUG_MODE=coverage phpunit --coverage-clover build/coverage/clover.xml tests build/coverage",
         "check-cs": "ecs check",
         "fix-cs": "ecs check --fix",
-        "phpstan": "phpstan analyse --ansi"
+        "phpstan": "phpstan analyse src --level=8"
     }
 }
