@@ -18,12 +18,14 @@ final class GildedRose
     {
         $agedBrieUpdater = new AgedBrieItemUpdater();
         $backstagePassesUpdater = new BackstagePassesItemUpdater();
+        $conjuredUpdater = new ConjuredItemUpdater();
         $defaultUpdater = new DefaultItemUpdater();
         foreach ($this->items as $item) {
             match (ItemName::tryFrom($item->name)) {
                 ItemName::Sulfuras => null,
                 ItemName::AgedBrie => $agedBrieUpdater->update($item),
                 ItemName::BackstagePasses => $backstagePassesUpdater->update($item),
+                ItemName::Conjured => $conjuredUpdater->update($item),
                 null => $defaultUpdater->update($item),
             };
         }

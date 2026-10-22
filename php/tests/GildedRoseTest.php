@@ -165,4 +165,15 @@ class GildedRoseTest extends TestCase
         $this->assertSame(-1, $item->sellIn);
         $this->assertSame(0, $item->quality);
     }
+
+    public function testConjuredItemsDegradeTwiceAsFastAsNormalItems(): void
+    {
+        $sellIn = 1;
+        $dailyQualityDegradation = 2;
+        $item = new Item('Conjured Mana Cake', $sellIn, self::MAX_NORMAL_QUALITY);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        $this->assertSame(0, $item->sellIn);
+        $this->assertSame(self::MAX_NORMAL_QUALITY - $dailyQualityDegradation, $item->quality);
+    }
 }

@@ -6,16 +6,21 @@ namespace GildedRose;
 
 final class DefaultItemUpdater implements ItemUpdater
 {
+    private const DEGRADATION_RATE = 1;
+
     public function update(Item $item): void
     {
-        if ($item->quality > 0) {
-            $item->quality = $item->quality - 1;
-        }
+        $this->degradeQuality($item);
         $item->sellIn = $item->sellIn - 1;
         if ($item->sellIn < 0) {
-            if ($item->quality > 0) {
-                $item->quality = $item->quality - 1;
-            }
+            $this->degradeQuality($item);
+        }
+    }
+
+    private function degradeQuality(Item $item): void
+    {
+        if ($item->quality > 0) {
+            $item->quality = max(0, $item->quality - self::DEGRADATION_RATE);
         }
     }
 }
